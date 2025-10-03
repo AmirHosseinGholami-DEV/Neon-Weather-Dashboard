@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard | Reframe Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+    <!-- Background Elements -->
+    <div id="background-elements"></div>
+    
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl relative z-10">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-800 dark:text-blue-400 mb-4 md:mb-0">
+                Weather <span class="text-blue-600 dark:text-blue-300">Dashboard</span>
+            </h1>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Search Bar -->
+                <div class="relative">
+                    <input 
+                        id="search-input" 
+                        type="text" 
+                        placeholder="Search city..." 
+                        class="px-4 py-2 rounded-full border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-blue-600 transition-all duration-200 w-full md:w-64"
+                    >
+                    <button id="search-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div id="search-suggestions" class="hidden absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md max-h-60 overflow-auto"></div>
+                </div>
+                
+                <!-- Toggle Units -->
+                <button id="unit-toggle" class="bg-blue-100 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200">
+                    °C / °F
+                </button>
+                
+                <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" class="bg-blue-100 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-blue-800 dark:text-blue-300 p-2 rounded-full transition-colors duration-200">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
+                
+                <!-- Refresh Button -->
+                <button id="refresh-btn" class="bg-blue-100 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-blue-800 dark:text-blue-300 p-2 rounded-full transition-colors duration-200">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Current Weather -->
+        <div id="current-weather" class="glass-effect rounded-2xl p-6 mb-8 text-gray-800 dark:text-gray-200 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Main Weather Info -->
+                <div class="flex items-center mb-4 md:mb-0">
+                    <div id="weather-icon" class="text-8xl mr-6">
+                        <i class="fas fa-sun text-yellow-400"></i>
+                    </div>
+                    
+                    <div>
+                        <h2 id="city-name" class="text-3xl font-bold">Loading...</h2>
+                        <div id="weather-desc" class="text-lg text-gray-600 dark:text-gray-400">Current weather</div>
+                        <div class="flex items-center mt-2">
+                            <span id="current-temp" class="text-6xl font-bold">--</span>
+                            <span id="temp-unit" class="text-2xl ml-1">°C</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Weather Data -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 text-sm md:text-base">
+                    <div class="flex items-center">
+                        <i class="fas fa-temperature-low text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <div>
+                            <div>Feels like</div>
+                            <div id="feels-like" class="font-medium">--°</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-tint text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <div>
+                            <div>Humidity</div>
+                            <div id="humidity" class="font-medium">--%</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-wind text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <div>
+                            <div>Wind</div>
+                            <div id="wind-speed" class="font-medium">-- km/h</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-arrows-alt-h text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <div>
+                            <div>Pressure</div>
+                            <div id="pressure" class="font-medium">-- hPa</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-sun text-yellow-500 dark:text-yellow-400 mr-2"></i>
+                        <div>
+                            <div>Sunrise</div>
+                            <div id="sunrise" class="font-medium">--:--</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-moon text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <div>
+                            <div>Sunset</div>
+                            <div id="sunset" class="font-medium">--:--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 5-Day Forecast -->
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">5-Day Forecast</h3>
+        <div id="forecast-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            <!-- Forecast cards will be inserted here by JavaScript -->
+        </div>
+        
+        <!-- Favorites Section -->
+        <div class="mt-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Favorite Locations</h3>
+                <button id="add-favorite" class="bg-blue-100 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200">
+                    <i class="fas fa-plus mr-1"></i> Add Current
+                </button>
+            </div>
+            
+            <div id="favorites-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Favorite items will be inserted here by JavaScript -->
+                <div class="text-center text-gray-500 dark:text-gray-400">No favorites added yet</div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-600 dark:text-gray-400 text-sm">
+            <p>Built by the <span class="font-semibold text-blue-600 dark:text-blue-400">Reframe Development Team</span></p>
+            <p class="mt-1">Weather data provided by OpenWeatherMap</p>
+        </footer>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-md shadow-lg z-50"></div>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="loader"></div>
+    </div>
+    
+    <script src="scripts.js"></script>
+</body>
+</html>
